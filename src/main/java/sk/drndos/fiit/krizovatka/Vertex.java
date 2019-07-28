@@ -23,7 +23,7 @@ public class Vertex {
   /**
    * Default constructor which adds HashMap of all cars to this object
    */
-  public Vertex(HashMap<String, Car> value) {
+  Vertex(HashMap<String, Car> value) {
     this.value = value;
   }
 

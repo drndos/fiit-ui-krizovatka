@@ -364,14 +364,14 @@ public class Solver extends SwingWorker<Void, Vertex> {
   }
 
   private String makeHash(HashMap<String, Car> auticka) {
-    String hash = "";
+    StringBuilder hash = new StringBuilder();
     Set<String> set = auticka.keySet();
     TreeSet<String> ts = new TreeSet(set);
     for (String a : ts) {
-      hash += a;
+      hash.append(a);
     }
     //System.out.println("Made hash: " + hash);
-    return hash;
+    return hash.toString();
   }
 
   private Queue<Region> processImage(IplImage rawImage) {
@@ -416,15 +416,13 @@ public class Solver extends SwingWorker<Void, Vertex> {
     }
     Queue<Region> regions = new LinkedList<>();
     for (int i = 1; i <= Blobs.MaxLabel; i++) {
-      double[] Region = Blobs.RegionData[i];
-      int Parent = (int) Region[Blobs.BLOBPARENT];
-      int Color = (int) Region[Blobs.BLOBCOLOR];
-      int MinX = (int) Region[Blobs.BLOBMINX];
-      int MaxX = (int) Region[Blobs.BLOBMAXX];
-      int MinY = (int) Region[Blobs.BLOBMINY];
-      int MaxY = (int) Region[Blobs.BLOBMAXY];
-      highlight(rawImage, MinX, MinY, MaxX, MaxY, 1);
-      regions.add(new Region(MinX, MinY, MaxX, MaxY));
+      double[] region = Blobs.RegionData[i];
+      int minX = (int) region[Blobs.BLOBMINX];
+      int maxX = (int) region[Blobs.BLOBMAXX];
+      int minY = (int) region[Blobs.BLOBMINY];
+      int maxY = (int) region[Blobs.BLOBMAXY];
+      highlight(rawImage, minX, minY, maxX, maxY, 1);
+      regions.add(new Region(minX, minY, maxX, maxY));
     }
     if (debug) {
       showImage(rawImage, "RawImage");
@@ -441,7 +439,7 @@ public class Solver extends SwingWorker<Void, Vertex> {
   /**
    * Analyzes the Image to objects and then creates the Vertex from Image source
    */
-  public Vertex analyzeImage(IplImage RawImage) {
+  private Vertex analyzeImage(IplImage RawImage) {
     Queue<Region> regions = processImage(RawImage);
 
     Region mainRegion = regions.poll();
@@ -495,8 +493,7 @@ public class Solver extends SwingWorker<Void, Vertex> {
 
     cvReleaseImage(RawImage);
     RawImage = null;
-    Vertex s = new Vertex(allCars);
-    return s;
+    return new Vertex(allCars);
   }
 
   private double colourDistance(Color c1, Color c2) {
@@ -513,7 +510,7 @@ public class Solver extends SwingWorker<Void, Vertex> {
   /**
    * Loads image data into solver analyzing it and Creating initial Vertex and remembering the configuration
    */
-  public Vertex loadFromImage(String filename) {
+  Vertex loadFromImage(String filename) {
     IplImage RawImage;
     RawImage = cvLoadImage(filename);
     return analyzeImage(RawImage);
@@ -522,7 +519,7 @@ public class Solver extends SwingWorker<Void, Vertex> {
   /**
    * Shows Image in frame
    */
-  public static void showImage(IplImage image, String caption) {
+  private static void showImage(IplImage image, String caption) {
     CvMat mat = image.asCvMat();
     int width = mat.cols();
     if (width < 1) {
@@ -547,7 +544,7 @@ public class Solver extends SwingWorker<Void, Vertex> {
   /**
    * Captures current video input, analyzing it and Creating initial Vertex and remembering the configuration
    */
-  public Vertex capture() throws Exception {
+  Vertex capture() throws Exception {
     OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(0);
     grabber.start();
     ToIplImage converter = new ToIplImage();
@@ -589,7 +586,7 @@ public class Solver extends SwingWorker<Void, Vertex> {
   /**
    * Shows Image in frame
    */
-  public static void showImage(IplImage image, String caption, int width, int height) {
+  private static void showImage(IplImage image, String caption, int width, int height) {
     CanvasFrame canvas = new CanvasFrame(caption, 1);   // gamma=1
     canvas.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
     canvas.setCanvasSize(width, height);
@@ -600,11 +597,11 @@ public class Solver extends SwingWorker<Void, Vertex> {
   /**
    * Highlights area of image where object should be
    */
-  public static void highlight(IplImage image, int xMin, int yMin, int xMax, int yMax, int Thick) {
+  private static void highlight(IplImage image, int xMin, int yMin, int xMax, int yMax, int thick) {
 
     CvPoint pt1 = cvPoint(xMin, yMin);
     CvPoint pt2 = cvPoint(xMax, yMax);
     CvScalar color = cvScalar(255, 0, 0, 0);       // blue [green] [red]
-    cvRectangle(image, pt1, pt2, color, Thick, 4, 0);
+    cvRectangle(image, pt1, pt2, color, thick, 4, 0);
   }
 }

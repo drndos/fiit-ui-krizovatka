@@ -6,9 +6,7 @@
 package sk.drndos.fiit.krizovatka;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 /**
  * This is special class which replaces need of enum and provides anonymous values
@@ -71,7 +69,7 @@ public class Color2 {
   /**
    * Returns name of the value
    */
-  public String name() {
+  String name() {
     return name;
   }
 
@@ -79,13 +77,7 @@ public class Color2 {
    * Returns all Values in Array
    */
   static Color2[] values() {
-    ArrayList<Color2> c2 = new ArrayList<>();
-    farby.keySet().stream().map(Color2::valueOf).toArray();
-    for (String farba : farby.keySet()) {
-      c2.add(Color2.valueOf(farba));
-    }
-    return c2.toArray(new Color2[0]);
-    //return (Color2[]) farby.keySet().stream().map(Color2::valueOf).toArray(new Color2[0]);
+    return farby.keySet().stream().map(Color2::valueOf).toArray(Color2[]::new);
   }
 
   @Override

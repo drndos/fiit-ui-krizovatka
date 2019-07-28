@@ -1,0 +1,364 @@
+# Bláznivá križovatka
+## Info
+Autor: Filip Bednárik
+
+Škola: Slovenská technická univerzita v Bratislave
+
+Fakulta: Fakulta informatiky a informačných technológií
+
+Adresa: Ilkovičova 3, 842 16 Bratislava 4
+
+Študijný program: Informatika
+
+Ročník: 3
+
+Predmet: Umelá inteligencia
+
+Vedúci projektu: Ing. Ivan Kapustík
+
+Ak. rok: 2012/13
+
+## Obsah
+
+|         Úvod        |
+| --- |
+|         Zadanie        |
+|         Riešenie        |
+|         Použité technológie        |
+|         Inštalácia        |
+|         Opis riešenia        |
+|         Reprezentácia údajov        |
+|         Testovanie        |
+|         Testovanie rýchlosti algoritmov        |
+|         Testovanie možností vstupov        |
+| Vstup textovým súborom        |
+| Vstup myšou        |
+| Vstup obrázkom        |
+| Vstup zachytením obrazu        |
+|         Testovanie špeciálnych prípadov        |
+|         Záver        |
+|         Zhodnotenie riešenia        |
+|         Možnosti zlepšenia        |
+|         Výhody a nevýhody riešenia        |
+| |
+
+## Úvod
+### Zadanie
+
+Úlohou je nájsť riešenie hlavolamu Bláznivá križovatka. Hlavolam je reprezentovaný mriežkou, ktorá má rozmery 6 krát 6 políčok a obsahuje niekoľko vozidiel (áut a nákladiakov) rozložených na mriežke tak, aby sa neprekrývali. Všetky vozidlá majú šírku 1 políčko, autá sú dlhé 2 a nákladiaky sú dlhé 3 políčka. V prípade, že vozidlo nie je blokované iným vozidlom alebo okrajom mriežky, môže sa posúvať dopredu alebo dozadu, nie však do strany, ani sa nemôže otáčať. V jednom kroku sa môže pohybovať len jedno vozidlo. V prípade, že je pred (za) vozidlom voľných n políčok, môže sa vozidlo pohnúť o 1 až n políčok dopredu (dozadu). Ak sú napríklad pred vozidlom voľné 3 políčka (napr. oranžové vozidlo na počiatočnej pozícii, obr. 1), to sa môže posunúť buď o 1, 2, alebo 3 políčka.
+
+Hlavolam je vyriešený, keď je červené auto (v smere jeho jazdy) na okraji križovatky a môže z nej teda dostať von. Predpokladajte, že červené auto je vždy otočené horizontálne a smeruje doprava. Je potrebné nájsť postupnosť posunov vozidiel (nie pre všetky počiatočné pozície táto postupnosť existuje) tak, aby sa červené auto dostalo von z križovatky alebo vypísať, že úloha nemá riešenie.
+
+Použite algoritmus prehľadávania do šírky a do hĺbky. Porovnajte ich výsledky.
+
+Príklad:
+
+| Počiatočná pozícia | Cieľová pozícia |
+| --- | --- |
+|
+ ![](data:image/*;base64,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)
+|
+ ![](data:image/*;base64,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)
+|
+Obr. 1 Počiatočná a cieľová pozícia hlavolamu Bláznivá križovatka.
+
+## Riešenie
+### Použité technológie
+
+Java, OpenCV, JavaCV, Swing
+
+### Inštalácia
+
+1. Nainštalujte JDK alebo JRE (32bit/64bit podľa vášho procesoru)
+2. Skompilujte a zostavte JAR súbor
+3. Spustite aplikáciu príkazom java -jar Krizovatka.jar
+
+### Opis riešenia
+
+Opis použitia algoritmov. Aké možné vstupy je možné použiť je opísané v sekcii testovanie možností vstupov.
+
+Program využíva Deque, ktorá reprezentuje zásobník FIFO ale aj LIFO, podľa toho aké metódy sa nad ňou použijú.
+
+Program vytvára stavy. Každý stav má svoj „hash&quot; čo je vlastne textový opis stavu a tento je pre stav jedinečný.
+
+Program funguje následovne:
+
+- Vytvorí si prvý stav
+- Pre každé auto v stave zistí všetky jeho možné pohyby
+- Pre každý pohyb vytvorí nový stav
+- Každý tento stav pridá do Deque a zoznamu stavov ak je jedinečný
+- Pokračuje stavom získaného z vrchu Deque
+- Ak je Deque prázdne tak sa program končí neúspechom
+- Ak stav obsahuje auto v pozícii do ktorej ho chceme dostať tak je stav označený ako výsledný a program končí úspechom
+
+Program si pri každom stave zapamätáva predchodcu a operand použitý pri prechode. Tieto informácie využíva pri vypisovaní postupu riešenia pomocou rekurzie.
+
+**Ako prehľadáva stavy algortimus s LIFO zásobníkom (prehľadávanie do hĺbky):**
+
+![](data:image/*;base64,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)
+Príklad úlohy 1
+
+S1: (cervene 2 3 4 h)(ruzove 2 2 6 v)
+
+Rozvíjanie stavu S1:
+
+S2: (cervene 2 3 3 h)(ruzove 2 2 6 v)
+
+S3: (cervene 2 3 2 h)(ruzove 2 2 6 v)
+
+S4: (cervene 2 3 1 h)(ruzove 2 2 6 v)
+
+S5: (cervene 2 3 4 h)(ruzove 2 1 6 v)
+
+S6: (cervene 2 3 4 h)(ruzove 2 3 6 v)
+
+S7: (cervene 2 3 4 h)(ruzove 2 4 6 v)
+
+S8: (cervene 2 3 4 h)(ruzove 2 5 6 v)
+
+Rozvíjanie stavu S8 (ignorované duplicity):
+
+S9: (cervene 2 3 3 h)(ruzove 2 5 6 v)
+
+S10: (cervene 2 3 2 h)(ruzove 2 5 6 v)
+
+S11: (cervene 2 3 2 h)(ruzove 2 5 6 v)
+
+S12: (cervene 2 3 5 h)(ruzove 2 5 6 v)
+
+Stav S12 je finálny, algoritmus sa ukončí úspechom a cesta je:
+
+ (cervene 2 3 4 h)(ruzove 2 2 6 v)
+
+DOLE(ruzove, 3)
+
+ (cervene 2 3 4 h)(ruzove 2 5 6 v)
+
+VPRAVO(cervene, 1)
+
+ (cervene 2 3 5 h)(ruzove 2 5 6 v)
+
+**Ako prehľadáva stavy algoritmus s FIFO zásobníkom (prehľadávanie do šírky):**
+
+S1: (cervene 2 3 4 h)(ruzove 2 2 6 v)
+
+Rozvíjanie stavu S1:
+
+S2: (cervene 2 3 3 h)(ruzove 2 2 6 v)
+
+S3: (cervene 2 3 2 h)(ruzove 2 2 6 v)
+
+S4: (cervene 2 3 1 h)(ruzove 2 2 6 v)
+
+S5: (cervene 2 3 4 h)(ruzove 2 1 6 v)
+
+S6: (cervene 2 3 4 h)(ruzove 2 3 6 v)
+
+S7: (cervene 2 3 4 h)(ruzove 2 4 6 v)
+
+S8: (cervene 2 3 4 h)(ruzove 2 5 6 v)
+
+Rozvíjanie stavu S2: (ignorované duplicity)
+
+S9: (cervene 2 3 3 h)(ruzove 2 1 6 v)
+
+S10: (cervene 2 3 3 h)(ruzove 2 3 6 v)
+
+S11: (cervene 2 3 3 h)(ruzove 2 4 6 v)
+
+S12: (cervene 2 3 3 h)(ruzove 2 5 6 v)
+
+Rozvíjanie stavu S3: (ignorované duplicity)
+
+S13: (cervene 2 3 2 h)(ruzove 2 1 6 v)
+
+S14: (cervene 2 3 2 h)(ruzove 2 3 6 v)
+
+S15: (cervene 2 3 2 h)(ruzove 2 4 6 v)
+
+S16: (cervene 2 3 2 h)(ruzove 2 5 6 v)
+
+Rozvíjanie stavu S4: (ignorované duplicity)
+
+S17: (cervene 2 3 1 h)(ruzove 2 1 6 v)
+
+S18: (cervene 2 3 1 h)(ruzove 2 3 6 v)
+
+S19: (cervene 2 3 1 h)(ruzove 2 4 6 v)
+
+S20: (cervene 2 3 2 h)(ruzove 2 5 6 v)
+
+Rozvíjanie stavu S5:
+
+S21: (cervene 2 3 5 h)(ruzove 2 1 6 v)
+
+Stav S21 je finálny, algoritmus sa ukončí úspechom a cesta je:
+
+(cervene 2 3 4 h)(ruzove 2 2 6 v)
+
+HORE(ruzove, 1)
+
+ (cervene 2 3 4 h)(ruzove 2 1 6 v)
+
+VPRAVO(cervene, 1)
+
+(cervene 2 3 5 h)(ruzove 2 1 6 v)
+
+**Ako prehľadáva stavy algoritmus s FIFO zásobníkom (prehľadávanie do šírky):**
+
+![](data:image/*;base64,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)
+Príklad úlohy 2
+
+S1: (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+Rozvíjanie stavu S1:
+
+S2: (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+S3: (cervene 2 3 4 h)(cierne 2 5 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+Rozvíjanie stavu S2: (ignorované duplicity)
+
+S4:(cervene 2 3 5 h)(cierne 2 4 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+Stav S4 je finálny, algoritmus sa ukončí úspechom a cesta je:
+
+ (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+HORE(fialove, 1)
+
+ (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+VPRAVO(cervene, 1)
+
+ (cervene 2 3 5 h)(cierne 2 4 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+**Ako prehľadáva stavy algortimus s LIFO zásobníkom (prehľadávanie do hĺbky):**
+
+S1: (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+Rozvíjanie stavu S1:
+
+S2: (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+S3: (cervene 2 3 4 h)(cierne 2 5 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+Rozvíjanie stavu S3 (ignorované duplicity):
+
+S4:(cervene 2 3 4 h)(cierne 2 5 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+S5:(cervene 2 3 4 h)(cierne 2 5 6 v)(fialove 2 3 6 v)(oranzove 3 3 1 h)
+
+Rozvíjanie stavu S5(ignorované duplicity):
+
+Rozvíjanie stavu S4 (ignorované duplicity):
+
+S6:(cervene 2 3 5 h)(cierne 2 5 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+Stav S6 je finálny, algoritmus sa ukončí úspechom a cesta je:
+
+ (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+DOLE(cierne, 1)
+
+ (cervene 2 3 4 h)(cierne 2 5 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
+
+HORE(fialove, 1)
+
+ (cervene 2 3 4 h)(cierne 2 5 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+VPRAVO(cervene, 1)
+
+ (cervene 2 3 5 h)(cierne 2 5 6 v)(fialove 2 1 6 v)(oranzove 3 3 1 h)
+
+
+
+### Reprezentácia údajov
+
+Údaje sú reprezentované objektmi uloženými v štruktúre hashmáp.
+
+Použité boli dva algoritmy prehľadávanie do šírky a do hĺbky.
+
+Všetky stavy sú uložené v štruktúre HashMap\&lt;String, Vertex\&gt;. Nespracované stavy sú uložené v štruktúre Deque\&lt;Vertex\&gt;.
+
+Stav (Vertex) má v sebe záznam na predchodcu, operator akým sa z neho dostal a štruktúru aut.
+
+Štruktúra aut je vyjadrená mapou HashMap\&lt;String, Auto\&gt; kde String je textová reprezentácia auta a Auto je samotný objekt auta.
+
+Všetky údaje sú reprezentované aj graficky v GUI aj textovo v konzole.
+
+## Testovanie
+### Testovanie rýchlosti algoritmov
+
+Algoritmus používajúci zásobník FIFO je pomalší ako algoritmus používajuci LIFO avšak vracia najkratšiu cestu k výsledku.
+
+### Testovanie možností vstupov
+
+Vstup je možné zadávať viacerými spôsobmi:
+
+#### Vstup textovým súborom
+
+Vstupom je popísaný počiatočný stav aut pomocou slov v následovnom tvare:
+
+((cervene 2 3 1 h)(oranzove 2 1 1 v)(zlte 2 1 2 h)(fialove 2 1 4 h)(zelene 2 2 4 v)
+
+(svetlomodre 3 2 6 v)(sive 3 3 3 v)(tmavomodre 2 4 4 h)(ruzove 2 5 4 v)(tmavosive 2 5 5 h)(cierne 3 6 1 h))
+
+Začiatok vstupu je označený otvárajúcou zátvorkou a koniec vstupu uzavierajúcou zátvorkou. Jednotlivé autá majú farbu: (cervene, oranzove, zlte, fialove, zelene, svetlomodre, sive, ruzove, cierne, tmavosive, tmavomodre)
+
+Nasleduje veľkosť auta, súradnice Y a X (Y je riadok X je stĺpec) a orientácia auta (h pre horizontálne a v pre vertikálne).
+
+Program nekontroluje úplnú korektnosť vstupu, sám si ho upravuje na korektný do istej miery a pre správne vyriešenie problému vyžaduje červené auto v horizontálnej polohe). Program ukáže ako interpretoval vstup až po kliknutí na solve. Samozrejme je možné dokresliť autá pri vstupe myšou.
+
+#### Vstup myšou
+
+Jednoduchým klikaním je možné naklikať jednotlivé autá v mriežke. Vyberte farbu a následne kliknite na políčko v mriežke. Následne kliknite na Analyze Input. Program analyzuje vstup a následne umožní riešenie problému. Pri každej úprave je potrebné analyzovať vstup inak sa bude riešiť problém bez úprav.
+
+Program si sám upravuje vstup tak aby bol korektný. Pre správne vyriešenie problému vyžaduje červené auto v horizontálnej polohe). Program ukáže ako interpretoval vstup až po kliknutí na solve. Program interpretuje autá veľkosti 1 ako horizontálne.
+
+#### Vstup obrázkom
+
+Pri vybratí súboru obrázku program automaticky analyzuje objekty na obrázku a vytvorí rekonštrukciu problému. Program nie vždy správne odhadne farbu aut (berie ju zo stredu auta). Programu sa nie vždy podarí nájsť všetky autá a môže nájsť autá ktoré neexistujú. Samozrejme je možné upraviť si to vstupom myšou. Program sám odhaduje, ktoré auto je najčervenšie. Ak upravíte vstup myšou musíte explicitne nakresliť červené auto. Ak program zle určí červené auto jednoducho nakreslite červené auto tam kde má byť myšou a dajte analyzovať vstup.
+
+#### Vstup zachytením obrazu
+
+Vstup zachytením obrazu využíva rovnaký postup ako vstup obrázkom ale vstupom nie je súbor ale kamera.
+
+### Testovanie špeciálnych prípadov
+
+V prípade neplatného vstupu program vypíše Failure.
+
+Testoval som level 85 z hry a program ho vyriešil FIFO zásobníkom za 295 ms a LIFO zásobníkom za 45 ms.
+
+Testoval som vstupy uvedené v zadaní a program ich vyriešil za 187 ms (FIFO) a 22 ms (LIFO).
+
+## Záver
+### Zhodnotenie riešenia
+
+Riešenie zadania je komplexné a dokáže čítať rôzne vstupy, čo mu dáva výhodu najmä v použiteľnosti v praxi. Samotný algoritmus je primerane optimálny, vylučuje duplicitné stavy pomocou hashov a je možné si zvoliť ktoré prehľadávanie (do šírky/do hĺbky) sa použije vybratím typu zásobníka.
+
+### Možnosti zlepšenia
+
+- Viem si predstaviť, že by bolo možné robiť hashe jednoduchšie prípadne si stavy pamätať v inej štruktúre čo by zrýchlilo rýchlosť algoritmu o pár milisekúnd. Pri probléme 6x6 to však nehrá až takú rolu.
+- Program by mohol lepšie ošetrovať vstupy.
+- Program by mohol byť viac používateľsky prívetivý.
+- Program by mohol zobrazovať obraz ktorý zachytáva aj s vyznačenou detekciou objektov (mám to implementované ale naskytli sa problémy so synchroznizáciou tak som to kvôli nedostatku času nedal do výsledného programu)
+- Program by mohol mať viac nastavení (napr. nastavenie debug módu, úpravy obrazu pred spracovaním do objektov atď.)
+- Program by mohol bežať na mobilných zariadeniach. (Android by nemal byť problém – trebalo by len spraviť GUI)
+- Program by mohol riešenie robiť priamo na obraze z kamery a tak rozšíriť realitu.
+
+### Výhody a nevýhody riešenia
+
+**Výhody**
+
+- Množstvo vstupov
+- Rýchly algoritmus
+- Výber algoritmu v GUI
+- GUI s nastaveniami a reprezentáciou problem
+- Objektovosť a rozšíriteľnosť riešenia
+- Portabilita a multiplatformovosť
+
+**Nevýhody**
+
+- Program vyžaduje ffmpeg ak chceme zachytávať obraz z kamery
+- Program vyžaduje openCV knižnicu pre rozpoznávanie obrázkov, ktorá je trošku pamäťovo náročnejšia
