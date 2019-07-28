@@ -32,7 +32,8 @@ Príklad:
 | Počiatočná pozícia | Cieľová pozícia |
 | --- | --- |
 | ![Počiatočná pozícia](docs/krizovatka1.png?raw=true) | ![Cieľová pozícia](docs/krizovatka2.png?raw=true) |
-Obr. 1 Počiatočná a cieľová pozícia hlavolamu Bláznivá križovatka.
+
+*Obr. 1 Počiatočná a cieľová pozícia hlavolamu Bláznivá križovatka.*
 
 ## Riešenie
 ### Použité technológie
@@ -68,9 +69,11 @@ Program si pri každom stave zapamätáva predchodcu a operand použitý pri pre
 **Ako prehľadáva stavy algortimus s LIFO zásobníkom (prehľadávanie do hĺbky):**
 
 ![Príklad úlohy 1](docs/krizovatka3.png?raw=true)
+
 *Obr.2 Príklad úlohy 1*
 
 ![Diagram stavov](docs/krizovatka4.png?raw=true)
+
 *Obr.3 Diagram stavov*
 
 S1: (cervene 2 3 4 h)(ruzove 2 2 6 v)
@@ -116,6 +119,7 @@ VPRAVO(cervene, 1)
 **Ako prehľadáva stavy algoritmus s FIFO zásobníkom (prehľadávanie do šírky):**
 
 ![Diagram stavov](docs/krizovatka5.png?raw=true)
+
 *Obr.4 Diagram stavov*
 
 S1: (cervene 2 3 4 h)(ruzove 2 2 6 v)
@@ -185,9 +189,11 @@ VPRAVO(cervene, 1)
 **Ako prehľadáva stavy algoritmus s FIFO zásobníkom (prehľadávanie do šírky):**
 
 ![Príklad úlohy 2](docs/krizovatka6.png?raw=true)
+
 *Obr.5 Príklad úlohy 2*
 
 ![Diagram stavov](docs/krizovatka7.png?raw=true)
+
 *Obr.6 Diagram stavov*
 
 S1: (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
@@ -217,6 +223,7 @@ VPRAVO(cervene, 1)
 **Ako prehľadáva stavy algortimus s LIFO zásobníkom (prehľadávanie do hĺbky):**
 
 ![Diagram stavov](docs/krizovatka8.png?raw=true)
+
 *Obr.7 Diagram stavov*
 
 S1: (cervene 2 3 4 h)(cierne 2 4 6 v)(fialove 2 2 6 v)(oranzove 3 3 1 h)
